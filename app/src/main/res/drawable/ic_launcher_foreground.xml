@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Shadow/Glow -->
+    <path
+        android:pathData="M38,24 h32 v24 h24 v32 h-24 v24 h-32 v-24 h-24 v-32 h24 z"
+        android:fillColor="#33000000"/>
+
+    <!-- Main Cross Shape -->
+    <path
+        android:pathData="M38,22 h32 v24 h24 v32 h-24 v24 h-32 v-24 h-24 v-32 h24 z"
+        android:strokeWidth="1"
+        android:strokeColor="#33FFFFFF">
+        <aapt:attr name="android:fillColor" xmlns:aapt="http://schemas.android.com/aapt">
+            <gradient 
+                android:startX="20"
+                android:startY="20"
+                android:endX="88"
+                android:endY="88"
+                android:type="linear">
+                <item android:offset="0" android:color="#FF7C3AED"/>
+                <item android:offset="1" android:color="#FF14B8A6"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+    
+    <!-- Glass Highlight -->
+    <path
+        android:pathData="M38,22 h32 v24 h24 v5 L80,30 L60,30 L60,22 Z"
+        android:fillColor="#33FFFFFF"/>
+        
+</vector>

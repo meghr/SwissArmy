@@ -1,0 +1,14 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.attri.swissarmy.feature.pdftools" >
+4
+5    <uses-sdk android:minSdkVersion="36" />
+6
+7    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+7-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-pdf-tools/src/main/AndroidManifest.xml:3:5-76
+7-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-pdf-tools/src/main/AndroidManifest.xml:3:22-73
+8    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+8-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-pdf-tools/src/main/AndroidManifest.xml:4:5-90
+8-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-pdf-tools/src/main/AndroidManifest.xml:4:22-87
+9
+10</manifest>

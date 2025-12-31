@@ -1,0 +1,154 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.attri.swissarmy.feature.utilities" >
+4
+5    <uses-sdk android:minSdkVersion="36" />
+6    <!-- SMS Permissions -->
+7    <uses-permission android:name="android.permission.READ_SMS" />
+7-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:3:5-66
+7-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:3:22-64
+8    <uses-permission android:name="android.permission.WRITE_SMS" />
+8-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:4:5-67
+8-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:4:22-65
+9    <uses-permission android:name="android.permission.SEND_SMS" />
+9-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:5:5-66
+9-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:5:22-64
+10    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+10-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:6:5-69
+10-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:6:22-67
+11    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+11-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:7:5-69
+11-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:7:22-67
+12    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH" />
+12-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:8:5-74
+12-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:8:22-72
+13    <uses-permission android:name="android.permission.READ_CELL_BROADCASTS" />
+13-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:9:5-78
+13-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:9:22-76
+14    <uses-permission android:name="android.permission.BROADCAST_SMS" />
+14-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:10:5-71
+14-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:10:22-69
+15    <uses-permission android:name="android.permission.BROADCAST_WAP_PUSH" />
+15-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:11:5-76
+15-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:11:22-74
+16
+17    <!-- Other Permissions -->
+18    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+18-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:14:5-77
+18-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:14:22-75
+19
+20    <application>
+20-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:16:5-64:19
+21
+22        <!-- BroadcastReceiver that listens for incoming SMS messages -->
+23        <receiver
+23-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:18:9-24:20
+24            android:name="com.attri.swissarmy.feature.utilities.cleaner.SmsReceiver"
+24-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:18:19-54
+25            android:exported="true"
+25-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:20:13-36
+26            android:permission="android.permission.BROADCAST_SMS" >
+26-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:19:13-66
+27            <intent-filter>
+27-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:21:13-23:29
+28                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+28-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:22:17-81
+28-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:22:25-78
+29            </intent-filter>
+30        </receiver>
+31
+32        <!-- BroadcastReceiver that listens for incoming MMS messages -->
+33        <receiver
+33-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:27:9-34:20
+34            android:name="com.attri.swissarmy.feature.utilities.cleaner.MmsReceiver"
+34-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:27:19-54
+35            android:exported="true"
+35-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:29:13-36
+36            android:permission="android.permission.BROADCAST_WAP_PUSH" >
+36-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:28:13-71
+37            <intent-filter>
+37-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:30:13-33:29
+38                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+38-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:31:17-86
+38-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:31:25-83
+39
+40                <data android:mimeType="application/vnd.wap.mms-message" />
+40-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+40-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:23-73
+41            </intent-filter>
+42        </receiver>
+43
+44        <!-- Activity that allows the user to send new SMS/MMS messages -->
+45        <activity
+45-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:37:9-49:20
+46            android:name="com.attri.swissarmy.feature.utilities.cleaner.ComposeSmsActivity"
+46-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:37:19-61
+47            android:exported="true" >
+47-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:38:13-36
+48            <intent-filter>
+48-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:39:13-48:29
+49                <action android:name="android.intent.action.SEND" />
+49-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:40:17-69
+49-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:40:25-66
+50                <action android:name="android.intent.action.SENDTO" />
+50-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:41:17-71
+50-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:41:25-68
+51
+52                <category android:name="android.intent.category.DEFAULT" />
+52-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:42:17-76
+52-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:42:27-73
+53                <category android:name="android.intent.category.BROWSABLE" />
+53-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:43:17-78
+53-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:43:27-75
+54
+55                <data android:scheme="sms" />
+55-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+55-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+56                <data android:scheme="smsto" />
+56-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+56-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+57                <data android:scheme="mms" />
+57-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+57-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+58                <data android:scheme="mmsto" />
+58-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+58-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+59            </intent-filter>
+60        </activity>
+61
+62        <!-- Service that delivers messages from the phone "quick response" feature -->
+63        <service
+63-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:52:9-63:19
+64            android:name="com.attri.swissarmy.feature.utilities.cleaner.HeadlessSmsSendService"
+64-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:52:18-64
+65            android:exported="true"
+65-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:54:13-36
+66            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE" >
+66-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:53:13-77
+67            <intent-filter>
+67-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:55:13-62:29
+68                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+68-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:56:17-84
+68-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:56:25-81
+69
+70                <category android:name="android.intent.category.DEFAULT" />
+70-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:42:17-76
+70-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:42:27-73
+71
+72                <data android:scheme="sms" />
+72-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+72-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+73                <data android:scheme="smsto" />
+73-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+73-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+74                <data android:scheme="mms" />
+74-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+74-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+75                <data android:scheme="mmsto" />
+75-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:32:17-76
+75-->/Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-utilities/src/main/AndroidManifest.xml:44:23-43
+76            </intent-filter>
+77        </service>
+78    </application>
+79
+80</manifest>
