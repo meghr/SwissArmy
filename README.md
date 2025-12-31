@@ -45,9 +45,16 @@ A comprehensive Android utility application built with modern architecture patte
 - Clean, modern UI with live updates
 - Popular cities pre-configured
 
-### 📖 Dictionary
-- Word definitions and meanings
-- Clean lookup interface
+### 📖 Dictionary (Online)
+- **English → Hindi**: Type any English word to get Hindi translation
+- **Hindi → English**: Auto-detects Devanagari and translates to English
+- **Definitions**: Full word definitions with phonetics
+- **Synonyms & Antonyms**: Displayed as interactive chips
+- **Example Sentences**: Usage examples from API
+- **APIs Used**:
+  - Free Dictionary API (definitions, phonetics)
+  - Datamuse API (synonyms, antonyms - unlimited)
+  - MyMemory API (Hindi ↔ English translation)
 
 ### 📊 ASCII Table
 - Complete ASCII reference chart
@@ -95,6 +102,7 @@ SwissArmy/
 | **PDF** | Apache PDFBox Android |
 | **Scanning** | Google ML Kit Document Scanner |
 | **Image Loading** | Coil |
+| **Network** | Retrofit, Gson |
 
 ---
 
@@ -130,6 +138,12 @@ SwissArmy/
 - [x] Default quality/compression settings propagation
 - [x] UI refinements (grid spacing, tile sizes)
 
+### Phase 6: Online Features ✅
+- [x] Dictionary with online APIs (Free Dictionary + Datamuse + MyMemory)
+- [x] Hindi ↔ English translation
+- [x] Synonyms and antonyms from Datamuse
+- [x] Debounced search with loading states
+
 ---
 
 ## 🚀 Task Breakdown
@@ -161,6 +175,11 @@ SwissArmy/
 | Theme preference persistence | feature-settings | ✅ |
 | Default quality settings | feature-settings | ✅ |
 | Link settings to tools | Multiple | ✅ |
+| Dictionary API integration | feature-dictionary | ✅ |
+| Free Dictionary API (definitions) | feature-dictionary | ✅ |
+| Datamuse API (synonyms/antonyms) | feature-dictionary | ✅ |
+| MyMemory API (translation) | feature-dictionary | ✅ |
+| Hindi word detection | feature-dictionary | ✅ |
 
 ---
 
@@ -178,6 +197,9 @@ SwissArmy/
 
 <!-- Camera (for Document Scanner) -->
 <uses-permission android:name="android.permission.CAMERA"/>
+
+<!-- Internet (for Dictionary API) -->
+<uses-permission android:name="android.permission.INTERNET"/>
 ```
 
 ---
