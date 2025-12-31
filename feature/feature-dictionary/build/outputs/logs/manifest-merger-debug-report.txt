@@ -1,11 +1,15 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml:2:1-3:12
-INJECTED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml:2:1-3:12
+ADDED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml:2:1-4:12
+INJECTED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml:2:1-4:12
 	package
 		INJECTED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml:2:11-69
+uses-permission#android.permission.INTERNET
+ADDED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml:3:5-66
+	android:name
+		ADDED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml:3:22-64
 uses-sdk
 INJECTED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /Users/meghrahsharma/AndroidStudioProjects/SwissArmy/feature/feature-dictionary/src/main/AndroidManifest.xml

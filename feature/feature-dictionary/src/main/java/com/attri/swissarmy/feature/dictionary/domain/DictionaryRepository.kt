@@ -1,87 +1,136 @@
 package com.attri.swissarmy.feature.dictionary.domain
 
+import com.attri.swissarmy.feature.dictionary.data.DatamuseApiService
+import com.attri.swissarmy.feature.dictionary.data.FreeDictionaryApiService
+import com.attri.swissarmy.feature.dictionary.data.MyMemoryApiService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 data class DictionaryEntry(
     val english: String,
     val hindi: String,
-    val type: String, // Noun, Verb, etc.
+    val type: String,
+    val phonetic: String? = null,
+    val definition: String? = null,
     val synonyms: List<String> = emptyList(),
     val antonyms: List<String> = emptyList(),
     val example: String? = null
 )
 
 @Singleton
-class DictionaryRepository @Inject constructor() {
+class DictionaryRepository @Inject constructor(
+    private val freeDictionaryApi: FreeDictionaryApiService,
+    private val datamuseApi: DatamuseApiService,
+    private val myMemoryApi: MyMemoryApiService
+) {
 
-    // A small sample database for offline demonstration
-    private val database = listOf(
-        DictionaryEntry(
-            english = "Love",
-            hindi = "प्रेम (Prem)",
-            type = "Noun",
-            synonyms = listOf("Affection", "Devotion", "स्नेह (Sneh)"),
-            antonyms = listOf("Hate", "घृणा (Ghrina)"),
-            example = "Love conquers all."
-        ),
-        DictionaryEntry(
-            english = "Peace",
-            hindi = "शांति (Shanti)",
-            type = "Noun",
-            synonyms = listOf("Calm", "Harmony", "सुकून (Sukun)"),
-            antonyms = listOf("War", "Conflict", "अशांति (Ashanti)"),
-            example = "We pray for world peace."
-        ),
-        DictionaryEntry(
-            english = "Work",
-            hindi = "काम (Kaam)",
-            type = "Verb/Noun",
-            synonyms = listOf("Task", "Labor", "कार्य (Karya)"),
-            antonyms = listOf("Rest", "आराम (Aaram)"),
-            example = "Hard work pays off."
-        ),
-        DictionaryEntry(
-            english = "Success",
-            hindi = "सफलता (Safalta)",
-            type = "Noun",
-            synonyms = listOf("Victory", "Achievement", "जीत (Jeet)"),
-            antonyms = listOf("Failure", "विफलता (Vifalta)"),
-            example = "Success is a journey, not a destination."
-        ),
-        DictionaryEntry(
-            english = "Knowledge",
-            hindi = "ज्ञान (Gyaan)",
-            type = "Noun",
-            synonyms = listOf("Wisdom", "Learning", "विद्या (Vidya)"),
-            antonyms = listOf("Ignorance", "अज्ञान (Agyaan)"),
-            example = "Knowledge is power."
-        ),
-        DictionaryEntry(
-            english = "Friend",
-            hindi = "मित्र (Mitra)",
-            type = "Noun",
-            synonyms = listOf("Companion", "Buddy", "दोस्त (Dost)"),
-            antonyms = listOf("Enemy", "शत्रु (Shatru)"),
-            example = "A friend in need is a friend indeed."
-        ),
-         DictionaryEntry(
-            english = "Beautiful",
-            hindi = "सुंदर (Sundar)",
-            type = "Adjective",
-            synonyms = listOf("Pretty", "Lovely", "खूबसूरत (Khoobsurat)"),
-            antonyms = listOf("Ugly", "बदसूरत (Badsurat)"),
-            example = "Nature is beautiful."
-        )
-    )
-
-    fun search(query: String): List<DictionaryEntry> {
+    suspend fun search(query: String): List<DictionaryEntry> = withContext(Dispatchers.IO) {
         val q = query.trim()
-        if (q.isBlank()) return emptyList()
+        if (q.isBlank()) return@withContext emptyList()
 
-        return database.filter { 
-            it.english.contains(q, ignoreCase = true) || 
-            it.hindi.contains(q, ignoreCase = true) 
+        val results = mutableListOf<DictionaryEntry>()
+
+        // Check if input is Hindi (contains Devanagari characters)
+        val isHindi = q.any { it.code in 0x0900..0x097F }
+
+        if (isHindi) {
+            // Hindi to English translation
+            try {
+                val translation = myMemoryApi.translate(q, "hi|en")
+                val englishWord = translation.responseData?.translatedText ?: ""
+                
+                if (englishWord.isNotBlank()) {
+                    // Now get definition for the English word
+                    val entry = getEnglishDefinition(englishWord, q)
+                    if (entry != null) results.add(entry)
+                }
+            } catch (e: Exception) {
+                // Translation failed, return empty
+            }
+        } else {
+            // English word - get definition and translate to Hindi
+            val entry = getEnglishDefinition(q, null)
+            if (entry != null) results.add(entry)
+        }
+
+        return@withContext results
+    }
+
+    private suspend fun getEnglishDefinition(englishWord: String, originalHindi: String?): DictionaryEntry? {
+        return withContext(Dispatchers.IO) {
+            try {
+                // Parallel API calls
+                val definitionDeferred = async { 
+                    try { freeDictionaryApi.getDefinition(englishWord) } catch (e: Exception) { null }
+                }
+                val synonymsDeferred = async { 
+                    try { datamuseApi.getSynonyms(englishWord) } catch (e: Exception) { emptyList() }
+                }
+                val antonymsDeferred = async { 
+                    try { datamuseApi.getAntonyms(englishWord) } catch (e: Exception) { emptyList() }
+                }
+                val hindiDeferred = async {
+                    if (originalHindi != null) {
+                        originalHindi
+                    } else {
+                        try {
+                            val result = myMemoryApi.translate(englishWord, "en|hi")
+                            result.responseData?.translatedText ?: ""
+                        } catch (e: Exception) { "" }
+                    }
+                }
+
+                val definitions = definitionDeferred.await()
+                val synonyms = synonymsDeferred.await()
+                val antonyms = antonymsDeferred.await()
+                val hindiTranslation = hindiDeferred.await()
+
+                if (definitions.isNullOrEmpty()) {
+                    // No definition found, but we might have translation
+                    if (hindiTranslation?.isNotBlank() == true) {
+                        return@withContext DictionaryEntry(
+                            english = englishWord.replaceFirstChar { it.uppercase() },
+                            hindi = hindiTranslation,
+                            type = "Word",
+                            synonyms = synonyms?.take(5)?.mapNotNull { it.word } ?: emptyList(),
+                            antonyms = antonyms?.take(5)?.mapNotNull { it.word } ?: emptyList()
+                        )
+                    }
+                    return@withContext null
+                }
+
+                val firstResult = definitions.first()
+                val firstMeaning = firstResult.meanings?.firstOrNull()
+                val firstDefinition = firstMeaning?.definitions?.firstOrNull()
+
+                // Combine synonyms from Free Dictionary API and Datamuse
+                val allSynonyms = mutableListOf<String>()
+                firstMeaning?.synonyms?.take(3)?.let { allSynonyms.addAll(it) }
+                firstDefinition?.synonyms?.take(2)?.let { allSynonyms.addAll(it) }
+                synonyms?.take(5)?.mapNotNull { it.word }?.let { allSynonyms.addAll(it) }
+
+                // Combine antonyms
+                val allAntonyms = mutableListOf<String>()
+                firstMeaning?.antonyms?.take(3)?.let { allAntonyms.addAll(it) }
+                firstDefinition?.antonyms?.take(2)?.let { allAntonyms.addAll(it) }
+                antonyms?.take(5)?.mapNotNull { it.word }?.let { allAntonyms.addAll(it) }
+
+                DictionaryEntry(
+                    english = firstResult.word?.replaceFirstChar { it.uppercase() } ?: englishWord,
+                    hindi = hindiTranslation ?: "",
+                    type = firstMeaning?.partOfSpeech?.replaceFirstChar { it.uppercase() } ?: "Word",
+                    phonetic = firstResult.phonetic ?: firstResult.phonetics?.firstOrNull()?.text,
+                    definition = firstDefinition?.definition,
+                    synonyms = allSynonyms.distinct().take(8),
+                    antonyms = allAntonyms.distinct().take(8),
+                    example = firstDefinition?.example
+                )
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 }

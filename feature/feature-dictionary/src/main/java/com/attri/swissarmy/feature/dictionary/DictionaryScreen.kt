@@ -1,7 +1,10 @@
 package com.attri.swissarmy.feature.dictionary
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,13 +12,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Translate
-import androidx.compose.material3.Divider
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -68,27 +72,55 @@ fun DictionaryScreen(
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(end = 8.dp)
                 )
-                Text(
-                    text = "Dictionary",
-                    style = MaterialTheme.typography.headlineMedium
-                )
+                Column {
+                    Text(
+                        text = "Dictionary",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Text(
+                        text = "English ↔ Hindi • Synonyms • Antonyms",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
             
             OutlinedTextField(
                 value = uiState.query,
                 onValueChange = onQueryChange,
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("Search English or Hindi...") },
+                placeholder = { Text("Type English or Hindi word...") },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                singleLine = true
+                singleLine = true,
+                trailingIcon = {
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
+                }
             )
             
-            if (uiState.results.isEmpty() && uiState.query.isNotEmpty()) {
+            if (uiState.error != null) {
                 Text(
-                    text = "No definitions found.",
+                    text = uiState.error,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.error
                 )
+            }
+            
+            if (uiState.results.isEmpty() && uiState.query.length > 1 && !uiState.isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(32.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "No definitions found for \"${uiState.query}\"",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
             
             LazyColumn(
@@ -103,21 +135,32 @@ fun DictionaryScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DictionaryItem(entry: DictionaryEntry) {
     SwissCard {
         Column(modifier = Modifier.fillMaxWidth()) {
+            // Header - English word and type
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = entry.english,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Column {
+                    Text(
+                        text = entry.english,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    entry.phonetic?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
                 Text(
                     text = entry.type,
                     style = MaterialTheme.typography.labelMedium,
@@ -128,52 +171,77 @@ fun DictionaryItem(entry: DictionaryEntry) {
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            Text(
-                text = entry.hindi,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Medium
-            )
+            // Hindi translation
+            if (entry.hindi.isNotBlank()) {
+                Text(
+                    text = entry.hindi,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
             
-            Spacer(modifier = Modifier.height(12.dp))
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha=0.5f))
+            // Definition
+            entry.definition?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+            
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             Spacer(modifier = Modifier.height(12.dp))
             
             // Synonyms
             if (entry.synonyms.isNotEmpty()) {
-                Row {
-                    Text(
-                        text = "Synonyms: ",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.Bold,
-                         color = MaterialTheme.colorScheme.tertiary
-                    )
-                    Text(
-                        text = entry.synonyms.joinToString(", "),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+                Text(
+                    text = "Synonyms",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
                 Spacer(modifier = Modifier.height(4.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    entry.synonyms.forEach { synonym ->
+                        AssistChip(
+                            onClick = { },
+                            label = { Text(synonym, style = MaterialTheme.typography.labelSmall) }
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
             }
             
             // Antonyms
             if (entry.antonyms.isNotEmpty()) {
-                Row {
-                    Text(
-                        text = "Antonyms: ",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontWeight = FontWeight.Bold,
-                         color = MaterialTheme.colorScheme.error
-                    )
-                    Text(
-                        text = entry.antonyms.joinToString(", "),
-                        style = MaterialTheme.typography.bodySmall
-                    )
+                Text(
+                    text = "Antonyms",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.error
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    entry.antonyms.forEach { antonym ->
+                        AssistChip(
+                            onClick = { },
+                            label = { Text(antonym, style = MaterialTheme.typography.labelSmall) }
+                        )
+                    }
                 }
-                 Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             // Example
-             entry.example?.let {
+            entry.example?.let {
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = "\"$it\"",
                     style = MaterialTheme.typography.bodyMedium,
